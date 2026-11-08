@@ -37,7 +37,7 @@ const setProp_ = (k, v) => PropertiesService.getScriptProperties().setProperty(k
 function subirVersion_() { setProp_("VER", (Number(prop_("VER")) || 0) + 1); }
 function salida_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
 function esAdmin_(b) { return String(b.clave || "").trim().toLowerCase() === CLAVE_ADM; }
-function norm_(s) { return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-zñ ]/g, " ").replace(/\s+/g, " ").trim(); }
+function norm_(s) { return String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-zñ ]/g, " ").replace(/\s+/g, " ").trim(); }
 function clave_(s) { return norm_(s).split(" ").filter(Boolean).sort().join(" "); }
 function conLock_(fn) {
   const lock = LockService.getScriptLock();
