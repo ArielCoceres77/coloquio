@@ -10,7 +10,7 @@ const CUPO = 32;            // 32 lugares de exposición (16 por martes): cada i
 const HORAS = 12;           // corre desde que el profesor toca «Iniciar» en ADM
 const DIAS = ["Martes 17 de noviembre", "Martes 24 de noviembre"];
 const COLS = ["ID", "Fecha", "Modalidad", "Integrantes", "N.º proyecto", "Proyecto de la lista", "Nombre del proyecto",
-  "Objetivos o descripción", "Herramientas", "ID logo", "Tipo logo", "Lugar", "Día", "Fecha sorteo", "Idea propia"];
+  "Objetivos o descripción", "Herramientas", "ID logo", "Tipo logo", "Lugar", "Día", "Fecha sorteo", "Idea propia", "Repositorio o enlace"];
 
 /* ---------- utilidades ---------- */
 function hoja_() {
@@ -21,6 +21,9 @@ function hoja_() {
     sh.appendRow(COLS);
     sh.setFrozenRows(1);
     sh.getRange(1, 1, 1, COLS.length).setFontWeight("bold").setBackground("#1B4D3E").setFontColor("#F4F1E8");
+  }
+  if (sh.getRange(1, 16).getValue() !== "Repositorio o enlace") {
+    sh.getRange(1, 16).setValue("Repositorio o enlace").setFontWeight("bold").setBackground("#1B4D3E").setFontColor("#F4F1E8");
   }
   return sh;
 }
@@ -59,7 +62,7 @@ function filas_() {
       modalidad: String(r[2]), integrantes: integ, proyectoNum: Number(r[4]) || 0, proyectoBase: String(r[5]),
       nombreProyecto: String(r[6]), descripcion: String(r[7]), herramientas: String(r[8]),
       logoId: String(r[9]), logoTipo: String(r[10]), lugar: Number(r[11]) || 0, dia: String(r[12]),
-      fechaSorteo: r[13] instanceof Date ? r[13].toISOString() : String(r[13] || ""), ideaPropia: String(r[14] || "")
+      fechaSorteo: r[13] instanceof Date ? r[13].toISOString() : String(r[13] || ""), ideaPropia: String(r[14] || ""), enlace: String(r[15] || "")
     });
   }
   return out;
@@ -108,6 +111,7 @@ function doPost(e) {
       case "sortearTodos": return salida_(conLock_(sortearTodos_));
       case "quitarLugar": return salida_(conLock_(() => ponerLugar_(b.id, 0)));
       case "reiniciarSorteo": return salida_(conLock_(reiniciarSorteo_));
+      case "enlace": return salida_(conLock_(() => ponerEnlace_(b.id, b.enlace)));
     }
     return salida_({ ok: false, error: "accion" });
   } catch (err) {
@@ -245,4 +249,15 @@ function bolillero_(b) {
   const r = ponerLugar_(f.id, lugar);
   r.dia = diaDe_(lugar); r.nombreProyecto = f.nombreProyecto; r.integrantes = f.integrantes;
   return r;
+}
+
+/* ---------- repositorio o enlace de cada grupo (lo carga el profesor desde ADM) ---------- */
+function ponerEnlace_(id, enlace) {
+  const f = filas_().find((x) => x.id === String(id || ""));
+  if (!f) return { ok: false, error: "noexiste" };
+  const v = String(enlace || "").trim().slice(0, 500);
+  if (v && !/^https?:\/\/\S+$/i.test(v)) return { ok: false, error: "enlace" };
+  hoja_().getRange(f.fila, 16).setValue(v);
+  subirVersion_();
+  return estado_();
 }
