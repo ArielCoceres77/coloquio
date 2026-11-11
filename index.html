@@ -482,7 +482,6 @@ footer b{color:var(--oro2)}
     <div class="marcador"><b id="mIns">0</b><span>proyectos</span></div>
     <div class="marcador"><b id="mAlu">0</b><span>estudiantes</span></div>
     <div class="marcador"><b id="mSort">0</b><span>martes 17 / martes 24</span></div>
-    <div class="marcador"><b id="mLib">0</b><span>con repositorio cargado</span></div>
   </div>
   <div class="dias">
     <div class="tarjeta dia"><h3>📅 Martes 17 de noviembre</h3><p class="sub" id="sub1">Orden de exposición</p><ol class="turnos" id="dia1"></ol></div>
@@ -528,7 +527,7 @@ footer b{color:var(--oro2)}
           <button class="btn sec chico" type="button" id="bSortearTodos">Sortear a todos</button>
           <button class="btn peligro chico" type="button" id="bReiniciar">↺ Reiniciar sorteo</button>
         </div>
-        <p class="ayuda">El orden de exposición se numera solo, del 1 en adelante: primero el martes 17 y después el martes 24. Cargá el repositorio de cada grupo en la tabla de abajo.</p>
+        <p class="ayuda">El orden de exposición se numera solo, del 1 en adelante: primero el martes 17 y después el martes 24.</p>
       </div>
     </div>
 
@@ -543,7 +542,7 @@ footer b{color:var(--oro2)}
       </div>
       <p class="bajada" id="admResumen" style="margin-top:8px">—</p>
       <div class="tabla-wrap"><table>
-        <thead><tr><th>Logo</th><th>N.º</th><th>Nombre y descripción</th><th>Repositorio o enlace</th><th>Integrantes</th><th>Proyecto elegido</th><th>Herramientas</th><th>Código</th><th>Acciones</th></tr></thead>
+        <thead><tr><th>Logo</th><th>N.º</th><th>Nombre y descripción</th><th>Integrantes</th><th>Proyecto elegido</th><th>Herramientas</th><th>Código</th><th>Acciones</th></tr></thead>
         <tbody id="tabla"></tbody>
       </table></div>
     </div>
@@ -983,8 +982,8 @@ function pintarExpositores(nuevos = []) {
   const L = E.inscripciones, O = ordenados();
   const alumnos = L.reduce((a, x) => a + x.integrantes.length, 0);
   const d1 = O.filter((x) => x.lugar <= 16), d2 = O.filter((x) => x.lugar > 16);
-  $("#mIns").textContent = L.length; $("#mAlu").textContent = alumnos; $("#mSort").textContent = d1.length + " / " + d2.length; $("#mLib").textContent = L.filter((x) => enlaceOk(x.enlace)).length;
-  const turno = (x, n) => `<li class="turno ${nuevos.includes(x.id) ? "nuevo" : ""}" data-id="${esc(x.id)}"><span class="pos">${n}</span><span class="lg" data-logo="${esc(x.id)}">${imgLogo(x.id)}</span><div class="dat"><b>${esc(x.nombreProyecto)}</b><small>${esc(x.integrantes.join(" · "))}</small><small>${esc(etiquetaProyecto(x))}</small>${enlaceOk(x.enlace) ? `<a class="repo" href="${esc(x.enlace.trim())}" target="_blank" rel="noopener">🔗 Repositorio: ${esc(x.enlace.trim().replace(/^https?:\/\//, ""))}</a>` : `<span class="repo pend">🔗 Repositorio: pendiente</span>`}</div></li>`;
+  $("#mIns").textContent = L.length; $("#mAlu").textContent = alumnos; $("#mSort").textContent = d1.length + " / " + d2.length;
+  const turno = (x, n) => `<li class="turno ${nuevos.includes(x.id) ? "nuevo" : ""}" data-id="${esc(x.id)}"><span class="pos">${n}</span><span class="lg" data-logo="${esc(x.id)}">${imgLogo(x.id)}</span><div class="dat"><b>${esc(x.nombreProyecto)}</b><small>${esc(x.integrantes.join(" · "))}</small><small>${esc(etiquetaProyecto(x))}</small></div></li>`;
   const vacioDia = `<li class="vacio">Todavía no hay expositores para este día.</li>`;
   $("#dia1").innerHTML = d1.length ? d1.map((x, i) => turno(x, i + 1)).join("") : vacioDia;
   $("#dia2").innerHTML = d2.length ? d2.map((x, i) => turno(x, d1.length + i + 1)).join("") : vacioDia;
@@ -1060,13 +1059,12 @@ function pintarAdm() {
     <td><span class="lg" data-logo="${esc(x.id)}" data-zoom="${esc(x.id)}" title="Ver logo">${imgLogo(x.id)}</span></td>
     <td>${x.lugar ? `<span class="lugar-tag">${OR.get(x.id)}</span><br><small>${x.lugar <= 16 ? "Mar 17" : "Mar 24"}</small>` : "—"}</td>
     <td><b>${esc(x.nombreProyecto)}</b><br><small>${esc(x.descripcion)}</small></td>
-    <td><div class="campo-enlace"><input type="text" data-id="${esc(x.id)}" value="${esc(x.enlace || "")}" placeholder="https://usuario.github.io/proyecto/" aria-label="Repositorio o enlace de ${esc(x.nombreProyecto)}"><button class="btn chico" data-a="enlace" data-id="${esc(x.id)}">💾 Guardar enlace</button>${enlaceOk(x.enlace) ? `<a href="${esc(x.enlace.trim())}" target="_blank" rel="noopener">Abrir ↗</a>` : ""}</div></td>
     <td>${x.integrantes.map(esc).join("<br>")}</td>
     <td>${x.proyectoNum ? `<b>${x.proyectoNum}.</b> ${esc(x.proyectoBase)}` : `<b>Propio:</b> ${esc(x.ideaPropia)}`}</td>
     <td><small>${esc(x.herramientas)}</small></td>
     <td><b>${esc(x.id)}</b><br><small>${esc(x.modalidad)} · ${fecha(x.fecha)}</small></td>
     <td><div class="acciones">${x.lugar ? `<button class="btn sec chico" data-a="quitar" data-id="${esc(x.id)}">Quitar lugar</button>` : `<button class="btn chico" data-a="sortear" data-id="${esc(x.id)}">🎲 Sortear</button>`}<button class="btn peligro chico" data-a="borrar" data-id="${esc(x.id)}">Borrar</button></div></td>
-  </tr>`).join("") : `<tr><td colspan="9" class="vacio">Todavía no hay inscriptos.</td></tr>`;
+  </tr>`).join("") : `<tr><td colspan="8" class="vacio">Todavía no hay inscriptos.</td></tr>`;
 }
 $("#tabla").addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.matches("input[data-id]")) { e.preventDefault(); e.target.parentElement.querySelector("button[data-a=enlace]").click(); } });
 $("#tabla").addEventListener("click", async (e) => {
@@ -1115,10 +1113,10 @@ $("#bBorrarTodo").addEventListener("click", () => {
   ok.addEventListener("click", async () => { ok.disabled = true; ok.textContent = "⏳ Borrando…"; const r = await adm("borrarTodo"); cerrarModal(); if (r?.ok) { logos.clear(); yoSorteo.clear(); toast(`🗑️ Se borraron ${r.borrados ?? 0} inscripciones.`); } });
 });
 $("#bExcel").addEventListener("click", () => {
-  const cab = ["N.º", "Lugar sorteado", "Día", "Repositorio o enlace", "Código", "Modalidad", "Integrantes", "N.º proyecto", "Proyecto de la lista", "Idea propia", "Nombre del proyecto", "Objetivos o descripción", "Herramientas", "Fecha de inscripción"];
+  const cab = ["N.º", "Lugar sorteado", "Día", "Código", "Modalidad", "Integrantes", "N.º proyecto", "Proyecto de la lista", "Idea propia", "Nombre del proyecto", "Objetivos o descripción", "Herramientas", "Fecha de inscripción"];
   const L = [...E.inscripciones].sort((a, b) => (a.lugar || 99) - (b.lugar || 99));
   const c = (v) => `"${String(v ?? "").replace(/"/g, '""').replace(/\r?\n/g, " ")}"`;
-  const OR = ordenes(); const filas = L.map((x) => [OR.get(x.id) || "", x.lugar || "", x.lugar ? DIAS[diaDe(x.lugar)] : "", x.enlace || "", x.id, x.modalidad, x.integrantes.join(" / "), x.proyectoNum || "", x.proyectoNum ? x.proyectoBase : "Proyecto propio", x.ideaPropia, x.nombreProyecto, x.descripcion, x.herramientas, fecha(x.fecha)].map(c).join(";"));
+  const OR = ordenes(); const filas = L.map((x) => [OR.get(x.id) || "", x.lugar || "", x.lugar ? DIAS[diaDe(x.lugar)] : "", x.id, x.modalidad, x.integrantes.join(" / "), x.proyectoNum || "", x.proyectoNum ? x.proyectoBase : "Proyecto propio", x.ideaPropia, x.nombreProyecto, x.descripcion, x.herramientas, fecha(x.fecha)].map(c).join(";"));
   const csv = "﻿" + [cab.map(c).join(";"), ...filas].join("\r\n");
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = "Coloquio_Final_inscriptos.csv"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 });
