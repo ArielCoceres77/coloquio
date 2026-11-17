@@ -1,6 +1,6 @@
 # Coloquio Final · Auxiliar en IA · 2026
 
-Inscripción en tiempo real al Coloquio Final del ISFD y T «República Federal de Alemania», El Colorado, Formosa. Se expone el **martes 17** (lugares 1 al 16) y el **martes 24 de noviembre** (lugares 17 al 32).
+Inscripción en tiempo real al Coloquio Final del ISFD y T «República Federal de Alemania», El Colorado, Formosa. Se expone el **jueves 19** y el **martes 24 de noviembre**, las dos jornadas desde las **19 h**.
 
 - **1 · Inscripción:** individual o en grupo de 2 o 3, apellido y nombres, proyecto (uno de los 30 de la lista u otro propio), nombre, objetivos, herramientas y logo obligatorio. Cada proyecto de la lista lo toma una sola inscripción y se bloquea para el resto al instante. Al terminar, el alumno toca el **bolillero** con su código y le sale su lugar de exposición.
 - **2 · Expositores:** orden de exposición por martes, con el logo de cada proyecto. Cuando el profesor sortea, el número aparece en vivo en todas las pantallas.
